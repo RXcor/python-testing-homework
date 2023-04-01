@@ -66,3 +66,4 @@ def test_registration_forgotten_required_field(
     assert response.status_code == HTTPStatus.OK
     if field != 'email':
         assert not User.objects.filter(email=registration_data['email']).exists()
+

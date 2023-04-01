@@ -5,11 +5,13 @@ It may be also used for extending doctest's context:
 1. https://docs.python.org/3/library/doctest.html
 2. https://docs.pytest.org/en/latest/doctest.html
 """
+import pytest
 
 pytest_plugins = [
     # Should be the first custom one:
     'tests.plugins.django_settings',
-    'tests.plugins.identity'
+    'tests.plugins.identity.user',
+    'tests.plugins.pictures.favourite_picture'
 
     # TODO: add your own plugins here!
 ]
