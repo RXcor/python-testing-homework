@@ -1,12 +1,15 @@
-import pytest
 import random
+from datetime import datetime
+import pytest
 from typing import Callable
 from mimesis.locales import Locale
 from mimesis.schema import Field, Schema
 from typing import final, TypedDict, Protocol
 from typing_extensions import Unpack, TypeAlias
-from datetime import datetime
+
+from django_fakery.faker_factory import Factory
 from server.apps.identity.models import User
+
 
 
 class UserData(TypedDict, total=False):
@@ -47,6 +50,17 @@ class RegistrationDataFactory(Protocol):
 @pytest.fixture()
 def faker_seed() -> int:
     return random.Random().getrandbits(32)
+
+
+@pytest.fixture()
+def mf(faker_seed: int) -> Field:
+    return Field(locale=Locale.RU, seed=faker_seed)
+
+
+@pytest.fixture()
+def default_password(mf: Field) -> str:
+    return mf('person.password')
+
 
 
 @pytest.fixture()
@@ -111,3 +125,31 @@ def user_data(registration_data: 'RegistrationData') -> 'UserData':
         for key_name, value_part in registration_data.items()
         if not key_name.startswith('password')
     }
+
+
+
+class UserFactory(Protocol):
+
+    def __call__(self, **fields) -> User:
+        """User model factory protocol."""
+
+
+
+@pytest.fixture()
+def user_factory(
+    fakery: Factory[User],
+    faker_seed: int,
+) -> UserFactory:
+    """Creates a factory to generate a `FavouritePicture` instance."""
+    def factory(**fields):
+        return fakery.make(  # type: ignore[call-overload]
+            model=User,
+            fields=fields,
+            seed=faker_seed
+        )
+    return factory
+
+
+@pytest.fixture()
+def user(user_factory: UserFactory) -> User:
+    return user_factory()
