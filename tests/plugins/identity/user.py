@@ -139,7 +139,6 @@ class UserFactory(Protocol):
 def user_factory(
     fakery: Factory[User],
     faker_seed: int,
-    default_password: str
 ) -> UserFactory:
     """Creates a factory to generate a `FavouritePicture` instance."""
     def factory(**fields):

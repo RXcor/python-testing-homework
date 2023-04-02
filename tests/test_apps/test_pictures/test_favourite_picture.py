@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 @pytest.mark.django_db()
 def test_favourite_picture_list(
     user: User,
-    user_client: Client,
+    logged_client: Client,
     favourite_picture_factory: 'FavouritePictureFactory'
 ):
     """Object list contains owned FavouritePicture only"""
@@ -21,7 +21,7 @@ def test_favourite_picture_list(
     favorite_picture_2 = favourite_picture_factory(user=user)
     favourite_picture_factory()
 
-    response = user_client.get(reverse('pictures:favourites'))
+    response = logged_client.get(reverse('pictures:favourites'))
     assert response.status_code == HTTPStatus.OK
     objects_list = list(
         response.context_data['object_list']

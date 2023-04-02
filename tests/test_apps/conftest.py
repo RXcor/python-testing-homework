@@ -5,7 +5,7 @@ from server.apps.identity.models import User
 
 
 @pytest.fixture()
-def user_client(user: User) -> Client:
+def logged_client(user: User) -> Client:
     """A Django test client logged in as the current user."""
     client = Client()
     client.force_login(user)
