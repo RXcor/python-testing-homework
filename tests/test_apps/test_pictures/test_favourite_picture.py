@@ -1,6 +1,6 @@
 from http import HTTPStatus
 from typing import TYPE_CHECKING
-
+from django.urls import reverse
 import pytest
 from django.test.client import Client
 
@@ -20,7 +20,8 @@ def test_favourite_picture_list(
     favorite_picture_1 = favourite_picture_factory(user=user)
     favorite_picture_2 = favourite_picture_factory(user=user)
     favourite_picture_factory()
-    response = user_client.get('/pictures/favourites')
+
+    response = user_client.get(reverse('pictures:favourites'))
     assert response.status_code == HTTPStatus.OK
     objects_list = list(
         response.context_data['object_list']
